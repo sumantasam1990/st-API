@@ -20,5 +20,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/', function () {
+    return 'st-API';
+});
+
 Route::get('teachers', [TeacherController::class, 'index']);
 Route::get('sessions/{uid}', [AppointmentController::class, 'appointments']);
