@@ -24,10 +24,10 @@ class AppointmentsCollection extends ResourceCollection
                     'session_dates' => $user->sessionDates->map(function ($date) {
                         return [
                             'date' => $date->session_date,
-                            //'teacher_id' => $date->teacher_id,
+                            'teacher_id' => $date->teacher_id,
                             'session_times' => $date->sessionTimes->map(function ($time) {
                                 return [
-                                    //'session_date_id' => $time->session_date_id,
+                                    'session_date_id' => $time->session_date_id,
                                     'time' => $time->session_time,
                                 ];
                             }),
