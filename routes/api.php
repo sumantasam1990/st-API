@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\SessionTimeController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,5 +25,19 @@ Route::get('/', function () {
     return 'st-API';
 });
 
+//Route::get('teachers', [TeacherController::class, 'index']);
+//Route::get('sessions/{uid}', [AppointmentController::class, 'appointments']);
+//
+//Route::get('test/name/{name}', [AppointmentController::class, 'getTestName']);
+//Route::get('test/age/{age}', [AppointmentController::class, 'getTestAge']);
+
+Route::get('/index', [AppointmentController::class, 'index']);
+
 Route::get('teachers', [TeacherController::class, 'index']);
-Route::get('sessions/{uid}', [AppointmentController::class, 'appointments']);
+
+Route::prefix('appointment')->group(function() {
+    Route::get('teacher/available/dates/{user}', [TeacherController::class, 'getTeacherAppointmentDate']);
+    Route::get('teacher/available/times/{sessionDate:id}', [SessionTimeController::class, 'getTeacherAppointmentTime']);
+
+    Route::post('book', [AppointmentController::class, 'book']);
+});

@@ -73,8 +73,8 @@ class User extends Authenticatable
     public function scopeGetTeachersProfile($query)
     {
         return $query->with(['profile'])->whereHas('profile', function ($q) {
-            $q->where('user_type', UserProfile::USER_TYPE_TEACHER);
-            $q->select('user_id', 'dob', 'gender', 'user_type');
+            $q->where('user_type', UserProfile::USER_TYPE_TEACHER)
+                ->select('id', 'user_id', 'dob', 'gender', 'user_type'); // Include the 'id' column
         });
     }
 }

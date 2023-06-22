@@ -12,9 +12,9 @@ class UserProfile extends Model
 
     protected $guarded = [];
 
-    public const USER_TYPE_TEACHER = 1;
+    public const USER_TYPE_TEACHER = 0;
 
-    public const USER_TYPE_STUDENT = 0;
+    public const USER_TYPE_STUDENT = 1;
 
     public const GENDER_MALE = 0;
 

@@ -11,6 +11,9 @@ class SessionTime extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $casts = [
+        'session_time' => 'date:h:i A',
+    ];
 
     public function teacher(): BelongsTo
     {

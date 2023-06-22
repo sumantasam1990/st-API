@@ -4,31 +4,21 @@ namespace App\Http\Resources;
 
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class AllTeachersCollection extends ResourceCollection
+class AllTeachersCollection extends JsonResource
 {
-    /**
-     * Transform the resource collection into an array.
-     *
-     * @return array<int|string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
-            'message' => 'success',
-            'data' => $this->collection->transform(function ($user) {
-                return [
-                    'teacher_id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'profile' => [
-                        'dob' => $user->profile->dob,
-                        'gender' => $user->profile->gender === UserProfile::GENDER_MALE ? 'Male' : 'Female',
-                        'user_type' => $user->profile->user_type === UserProfile::USER_TYPE_TEACHER ? 'Teacher' : '',
-                    ],
-                ];
-            }),
+                'teacher_id' => $this->id,
+                'name' => $this->name,
+                'email' => $this->email,
+                'profile' => [
+                    'dob' => $this->profile->dob,
+                    'gender' => $this->profile->gender === UserProfile::GENDER_MALE ? 'Male' : 'Female',
+                    'user_type' => $this->profile->user_type === UserProfile::USER_TYPE_TEACHER ? 'Teacher' : '',
+                ],
         ];
     }
 }
