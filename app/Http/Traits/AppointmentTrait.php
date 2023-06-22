@@ -56,21 +56,35 @@ trait AppointmentTrait
         DB::beginTransaction();
 
         try {
-            $book = new PurchaseSession;
-            $book->user_id = $request->input('user_id');
-            $book->teacher_id = $request->input('teacher_id');
-            $book->session_date_id = $request->input('sess_date');
-            $book->session_time_id = $request->input('sess_time');
-            $book->save();
+            $purchased = PurchaseSession::where('teacher_id', $request->input('teacher_id'))->where('session_date_id', $request->input('sess_date'))->where('session_time_id', $request->input('sess_time'))->count();
 
-            DB::commit();
+            //date and time both available to book for this teacher
+            if ($purchased === 0) {
+                $book = new PurchaseSession;
+                $book->user_id = $request->input('user_id');
+                $book->teacher_id = $request->input('teacher_id');
+                $book->session_date_id = $request->input('sess_date');
+                $book->session_time_id = $request->input('sess_time');
+                $book->save();
 
-            return $this->apiResponse(
-                [],
-                'Your appointment has been pending and going for approval.',
-                'success',
-                201,
-            );
+                DB::commit();
+
+                return $this->apiResponse(
+                    [],
+                    'Your appointment has been pending and going for approval.',
+                    'success',
+                    201,
+                );
+            } else {
+                DB::rollback();
+
+                return $this->apiResponse(
+                    [],
+                    'Sorry! You can not book this appointment because it is already booked.',
+                    'error',
+                    404,
+                );
+            }
 
         } catch (\Exception $e) {
             // An error occurred, rollback the transaction
