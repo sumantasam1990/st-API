@@ -3,10 +3,12 @@
 namespace App\Http\Traits;
 
 use App\Http\Resources\AppointmentsCollection;
+use App\Models\DateSave;
 use App\Models\PurchaseSession;
 use App\Models\User;
-use http\Client\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -48,10 +50,10 @@ trait AppointmentTrait
     /**
      * Save/store book appointment data
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function book(\Illuminate\Http\Request $request): JsonResponse
+    public function book(Request $request): JsonResponse
     {
         DB::beginTransaction();
 
@@ -98,5 +100,35 @@ trait AppointmentTrait
                 500,
             );
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function save_date(Request $request): JsonResponse
+    {
+        try {
+            $save = new DateSave;
+
+            $save->user_id = Auth::user()->id;
+            $save->teacher_id = $request->user_id;
+            $save->session_date_id = $request->session_date_id;
+            $save->save();
+        } catch (\Exception $e) {
+            return $this->apiResponse(
+                [$e->getMessage()],
+                'Error',
+                'error',
+                500,
+            );
+        }
+
+        return $this->apiResponse(
+            [],
+            'Success',
+            'success',
+            200,
+        );
     }
 }
